@@ -36,28 +36,34 @@ pip install pycolmap h5py
 ### 2.1 克隆 2DGS 仓库（真实场景 / 物体重建）
  克隆2DGS源码
 git clone https://github.com/hustvl/2DGS.git
+
 cd 2DGS
 
 安装2DGS专属依赖 & 编译扩展
 pip install -r requirements.txt
+
 python setup.py install
+
 cd ..
 ### 2.2 克隆 threestudio 仓库（文生 3D 模型）
 git clone https://github.com/threestudio-project/threestudio.git
+
 cd threestudio
+
 pip install -r requirements.txt
+
 cd ..
 
 ### 二、数据准备
 1. 物体 A 数据（多视角重建）
-使用手机拍摄环绕视频 / 多角度照片，存放至 ./data/obj_a/raw
+使用手机拍摄环绕视频 / 多角度照片，存放至 ./data/obj_A/raw.mp4
 
 2. 物体 B 数据（文生 3D）
 无需额外图像数据，仅准备文本 Prompt，在配置文件中填写即可。
 
 3. 物体 C 数据（单图生 3D）
 拍摄单张物体照片，去除背景得到纯前景图
-图片存放至 ./data/obj_c/input.jpg
+图片存放至 ./data/obj_C/input.png
 
 4. 背景场景数据
 下载 Mip-NeRF 360 开源数据集（garden / bicycle / counter 等），解压至 ./data/scene_background/
@@ -70,13 +76,13 @@ bash
 cd 2DGS
  2DGS 训练重建（基于COLMAP位姿数据，需先对raw运行colmap获得位姿数据）
 python train.py \
-    -s ../data/obj_a/colmap \
+    -s ../data/obj_A/colmap \
     --model_path ../output/obj_a_2dgs \
     --iterations 30000
 
  完成训练后，导出点云/高斯模型
 python export_ply.py \
-    -s ../data/obj_a/colmap \
+    -s ../data/obj_A/colmap \
     --model_path ../output/obj_a_2dgs
 -s：COLMAP 数据集路径
 
@@ -108,7 +114,7 @@ cd Magic123
 
 单图3D重建训练
 python run.py \
-    --input_img ../data/obj_c/input.jpg \
+    --input_img ../data/obj_C/input.jpg \
     --output_dir ../output/obj_c_magic123
     
 ### 3.4 背景场景：2DGS 场景重建
